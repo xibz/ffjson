@@ -20,6 +20,7 @@
 package v1
 
 func haveSSE42() bool
+
 func scanStringSSE(s []byte, j int) (int, byte)
 
 var sse42 = haveSSE42()

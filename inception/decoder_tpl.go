@@ -323,6 +323,7 @@ func (uj *{{.SI.Name}}) UnmarshalJSONFFLexer(fs *fflib.FFLexer, state fflib.FFPa
 	_ = currentKey
 	tok := fflib.FFTok_init
 	wantedTok := fflib.FFTok_init
+	var checkStructNull bool = true
 
 mainparse:
 	for {
@@ -395,6 +396,9 @@ mainparse:
 		case fflib.FFParse_want_value:
 
 			if {{range $index, $v := .ValidValues}}{{if ne $index 0 }}||{{end}}tok == fflib.{{$v}}{{end}} {
+				if checkStructNull {                                                                                                
+				  goto done                                                                                                         
+			  }  
 				switch currentKey {
 				{{range $index, $field := $si.Fields}}
 				case ffj_t_{{$si.Name}}_{{$field.Name}}:
@@ -412,6 +416,7 @@ mainparse:
 				goto wantedvalue
 			}
 		}
+		checkStructNull = false 
 	}
 
 {{range $index, $field := $si.Fields}}
